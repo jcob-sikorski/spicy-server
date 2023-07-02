@@ -47,8 +47,7 @@ def payment_sheet():
     logger.info(f"Json data: {data_dict}")
 
     amount = data_dict['amount']
-
-    amount = data['amount']
+    
     logger.info(f"Amount: {amount}")
 
     paymentIntent = stripe.PaymentIntent.create(
