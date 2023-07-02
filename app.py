@@ -38,7 +38,7 @@ def payment_sheet():
     logger.info("Created Stripe ephemeralKey")
     paymentIntent = stripe.PaymentIntent.create(
         amount=10,
-        currency='pln',
+        currency='eur',
         customer=customer['id'],
         automatic_payment_methods={
           'enabled': True,
