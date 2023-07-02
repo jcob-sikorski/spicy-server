@@ -32,10 +32,13 @@ def payment_sheet():
     data = request.get_data().decode('utf-8')
     data_dict = json.loads(data)
     email = data_dict['email']
+    logger.info(f"customer's email: {email}")
+    
     amount = data_dict['amount']
+    logger.info(f"amount paid: {amount}")
 
     stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
-    
+
       # Use an existing Customer ID if this is a returning customer
     customer = stripe.Customer.create(email=email)
     logger.info("Created Stripe Customer")
