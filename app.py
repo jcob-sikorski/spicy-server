@@ -47,12 +47,12 @@ def payment_sheet():
     logger.info(f"Json data: {data_dict}")
 
     amount = data_dict['amount']
-    
+
     logger.info(f"Amount: {amount}")
 
     paymentIntent = stripe.PaymentIntent.create(
         amount=int(amount*100),
-        currency='eur',
+        currency='pln',
         customer=customer['id'],
         automatic_payment_methods={
           'enabled': True,
