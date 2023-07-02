@@ -38,12 +38,12 @@ def payment_sheet():
     logger.info("Created Stripe ephemeralKey")
 
     # Read the amount from the request body
-    data = request.get_data()
+    data = request.get_data().decode('utf-8')
     logger.info(f"Request data: {data}")
 
     amount = data['amount']
     logger.info(f"Amount: {amount}")
-    
+
     paymentIntent = stripe.PaymentIntent.create(
         amount=int(amount*100),
         currency='eur',
