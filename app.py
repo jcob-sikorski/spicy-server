@@ -46,11 +46,8 @@ def payment_sheet():
     )
     logger.info("Created Stripe paymentIntent")
 
-    logger.info(f"Returning response: {jsonify(paymentIntent=paymentIntent.client_secret,
-                     ephemeralKey=ephemeralKey.secret,
-                     customer=customer.id,
-                     publishableKey=os.getenv('STRIPE_PUBLISHABLE_KEY')
-    )}")
+    logger.info(f"Returning response: {jsonify(paymentIntent=paymentIntent.client_secret, ephemeralKey=ephemeralKey.secret, customer=customer.id, publishableKey=os.getenv('STRIPE_PUBLISHABLE_KEY'))}")
+
     return jsonify(paymentIntent=paymentIntent.client_secret,
                      ephemeralKey=ephemeralKey.secret,
                      customer=customer.id,
