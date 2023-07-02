@@ -3,6 +3,7 @@ import stripe
 import os
 from dotenv import load_dotenv
 import logging
+import json
 
 app = Flask(__name__)
 
@@ -40,6 +41,12 @@ def payment_sheet():
     # Read the amount from the request body
     data = request.get_data().decode('utf-8')
     logger.info(f"Request data: {data}")
+
+    data_dict = json.loads(data)
+
+    logger.info(f"Json data: {data_dict}")
+
+    amount = data_dict['amount']
 
     amount = data['amount']
     logger.info(f"Amount: {amount}")
