@@ -38,7 +38,7 @@ def payment_sheet():
     logger.info("Created Stripe ephemeralKey")
 
     # Read the amount from the request body
-    data = request.get_json()
+    data = request.get_data()
     logger.info(f"Request data: {data}")
 
     # logger.info(f"Amount: {amount}")
