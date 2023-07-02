@@ -40,7 +40,8 @@ def payment_sheet():
     # Read the amount from the request body
     data = request.get_json()
     amount = data.get('amount')  # Default to 0 if amount is not provided
-
+    logger.info(f"Amount: {amount}")
+    logger.info(f"Amount type: {type(amount)}")
     paymentIntent = stripe.PaymentIntent.create(
         amount=amount*100,
         currency='eur',
