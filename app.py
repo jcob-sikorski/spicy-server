@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import stripe
 import os
 from dotenv import load_dotenv
@@ -36,8 +36,13 @@ def payment_sheet():
         stripe_version='2022-11-15',
     )
     logger.info("Created Stripe ephemeralKey")
+
+    # Read the amount from the request body
+    data = request.get_json()
+    amount = data.get('amount')  # Default to 0 if amount is not provided
+
     paymentIntent = stripe.PaymentIntent.create(
-        amount=1099,
+        amount=amount*100,
         currency='eur',
         customer=customer['id'],
         automatic_payment_methods={
