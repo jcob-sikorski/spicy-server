@@ -28,32 +28,29 @@ def payment_sheet():
 
     logger.info("Got payment request")
 
+    # Read the email and amount from the request body
+    data = request.get_data().decode('utf-8')
+    data_dict = json.loads(data)
+    email = data_dict['email']
+    amount = data_dict['amount']
+
     stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+    
       # Use an existing Customer ID if this is a returning customer
-    customer = stripe.Customer.create()
+    customer = stripe.Customer.create(email=email)
     logger.info("Created Stripe Customer")
+
     ephemeralKey = stripe.EphemeralKey.create(
         customer=customer['id'],
         stripe_version='2022-11-15',
     )
     logger.info("Created Stripe ephemeralKey")
 
-    # Read the amount from the request body
-    data = request.get_data().decode('utf-8')
-    logger.info(f"Request data: {data}")
-
-    data_dict = json.loads(data)
-
-    logger.info(f"Json data: {data_dict}")
-
-    amount = data_dict['amount']
-
-    logger.info(f"Amount: {amount}")
-
     paymentIntent = stripe.PaymentIntent.create(
         amount=int(amount*100),
         currency='pln',
         customer=customer['id'],
+        setup_future_usage='off_session',
         automatic_payment_methods={
           'enabled': True,
         },
