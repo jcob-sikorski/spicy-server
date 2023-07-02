@@ -38,12 +38,12 @@ def payment_sheet():
     logger.info("Created Stripe ephemeralKey")
 
     # Read the amount from the request body
-    data = request.get_json()
-    amount = data.get('amount')  # Default to 0 if amount is not provided
-    logger.info(f"Amount: {amount}")
-    logger.info(f"Amount type: {type(amount)}")
+    # data = request.get_json()
+    # amount = data.get('amount')  # Default to 0 if amount is not provided
+    # logger.info(f"Amount: {amount}")
+    # logger.info(f"Amount type: {type(amount)}")
     paymentIntent = stripe.PaymentIntent.create(
-        amount=amount*100,
+        amount=1099,
         currency='eur',
         customer=customer['id'],
         automatic_payment_methods={
