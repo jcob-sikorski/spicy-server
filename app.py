@@ -27,6 +27,8 @@ def initialize_firebase():
 configure_secrets()
 initialize_firebase()
 
+logger.info("Firestore initialized")
+
 # init db
 db = firestore.client()
 
