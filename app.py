@@ -49,6 +49,8 @@ def payment_sheet():
     product_prices_ref = db.collection('productPrices').limit(1)  # Replace with your document ID
     product_prices_doc = product_prices_ref.get()
 
+    logger.info(f"product_prices_doc {product_prices_doc}")
+
     if not product_prices_doc.exists:
         logger.info("Product prices document not found")
         return jsonify(error="Product prices not available"), 404
