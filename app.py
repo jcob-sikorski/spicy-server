@@ -4,6 +4,9 @@ import os
 from dotenv import load_dotenv
 import logging
 import json
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 app = Flask(__name__)
 
@@ -16,7 +19,16 @@ def configure_secrets():
     load_dotenv()
     logger.info("Environment Variables Loaded")
 
+# Initialize Firebase Admin SDK
+def initialize_firebase():
+    firebase_credentials = credentials.Certificate('firebase_credentials.json')  # Replace with your service account key file path
+    firebase_admin.initialize_app(firebase_credentials)
+
 configure_secrets()
+initialize_firebase()
+
+# init db
+db = firestore.client()
 
 # This example sets up an endpoint using the Flask framework.
 # Watch this video to get started: https://youtu.be/7Ul1vfmsDck.
@@ -31,22 +43,21 @@ def payment_sheet():
     # Read the email and amount from the request body
     data = request.get_data().decode('utf-8')
     data_dict = json.loads(data)
-    # email = data_dict['email']
-    # logger.info(f"customer's email: {email}")
 
-    product_prices = {
-        "always": 3.49,
-        "cup1": 9.99,
-        "cup2": 7.99,
-        "cup3": 6.49,
-        "durex1": 5.99,
-        "durex2": 6.99,
-        "faceplate": 4.99,
-        "pt1": 2.99,
-        "pt2": 3.99,
-        "pt3": 4.49,
-        "t1": 1.99
-    }
+    product_prices_ref = db.collection('productPrices').document('your_document_id')  # Replace with your document ID
+    product_prices_doc = product_prices_ref.get()
+
+    if not product_prices_doc.exists:
+        logger.info("Product prices document not found")
+        return jsonify(error="Product prices not available"), 404
+
+    product_prices_data = product_prices_doc.to_dict()
+
+    if not product_prices_data or 'productPrices' not in product_prices_data:
+        logger.info("Product prices not found in document")
+        return jsonify(error="Product prices not available"), 404
+
+    product_prices = product_prices_data['productPrices']
 
     products = data_dict['products']
     logger.info(f"products ordered: {products}")
