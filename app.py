@@ -34,8 +34,8 @@ def payment_sheet():
     # email = data_dict['email']
     # logger.info(f"customer's email: {email}")
 
-    amount = data_dict['amount']
-    logger.info(f"amount paid: {amount}")
+    products = data_dict['products']
+    logger.info(f"amount paid: {products}")
 
     stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
