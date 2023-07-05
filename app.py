@@ -46,7 +46,7 @@ def payment_sheet():
     data = request.get_data().decode('utf-8')
     data_dict = json.loads(data)
 
-    product_prices_ref = db.collection('productPrices').document('your_document_id')  # Replace with your document ID
+    product_prices_ref = db.collection('productPrices').limit(1)  # Replace with your document ID
     product_prices_doc = product_prices_ref.get()
 
     if not product_prices_doc.exists:
