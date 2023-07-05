@@ -34,12 +34,34 @@ def payment_sheet():
     # email = data_dict['email']
     # logger.info(f"customer's email: {email}")
 
+    product_prices = {
+        "always": 3.49,
+        "cup1": 9.99,
+        "cup2": 7.99,
+        "cup3": 6.49,
+        "durex1": 5.99,
+        "durex2": 6.99,
+        "faceplate": 4.99,
+        "pt1": 2.99,
+        "pt2": 3.99,
+        "pt3": 4.49,
+        "t1": 1.99
+    }
+
     products = data_dict['products']
-    logger.info(f"amount paid: {products}")
+    logger.info(f"products ordered: {products}")
+
+    total_amount = 0
+
+    for product_dict in products:
+        for product, quantity in product_dict.items():
+            if product in product_prices:
+                price = product_prices[product]
+                total_amount += price * quantity
 
     stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-      # Use an existing Customer ID if this is a returning customer
+    # Use an existing Customer ID if this is a returning customer
     # customer = stripe.Customer.create(email=email)
     customer = stripe.Customer.create()
     logger.info("Created Stripe Customer")
@@ -51,7 +73,7 @@ def payment_sheet():
     logger.info("Created Stripe ephemeralKey")
 
     paymentIntent = stripe.PaymentIntent.create(
-        amount=int(amount*100),
+        amount=int(total_amount * 100),
         currency='pln',
         customer=customer['id'],
         automatic_payment_methods={
@@ -63,10 +85,10 @@ def payment_sheet():
     logger.info(f"Returning response: {jsonify(paymentIntent=paymentIntent.client_secret, ephemeralKey=ephemeralKey.secret, customer=customer.id, publishableKey=os.getenv('STRIPE_PUBLISHABLE_KEY'))}")
 
     return jsonify(paymentIntent=paymentIntent.client_secret,
-                     ephemeralKey=ephemeralKey.secret,
-                     customer=customer.id,
-                     publishableKey=os.getenv('STRIPE_PUBLISHABLE_KEY')
-    )
+                   ephemeralKey=ephemeralKey.secret,
+                   customer=customer.id,
+                   publishableKey=os.getenv('STRIPE_PUBLISHABLE_KEY')
+                   )
 
 if __name__ == '__main__':
     app.run()
